@@ -1,0 +1,54 @@
+-- Migration: 002_create_partitions
+-- Description: Create transaction partitions for 2026
+-- Created: 2026-02-03
+
+BEGIN;
+
+-- Create partitions for 2026
+CREATE TABLE IF NOT EXISTS transactions_2026_01 PARTITION OF transactions
+    FOR VALUES FROM ('2026-01-01') TO ('2026-02-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_02 PARTITION OF transactions
+    FOR VALUES FROM ('2026-02-01') TO ('2026-03-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_03 PARTITION OF transactions
+    FOR VALUES FROM ('2026-03-01') TO ('2026-04-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_04 PARTITION OF transactions
+    FOR VALUES FROM ('2026-04-01') TO ('2026-05-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_05 PARTITION OF transactions
+    FOR VALUES FROM ('2026-05-01') TO ('2026-06-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_06 PARTITION OF transactions
+    FOR VALUES FROM ('2026-06-01') TO ('2026-07-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_07 PARTITION OF transactions
+    FOR VALUES FROM ('2026-07-01') TO ('2026-08-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_08 PARTITION OF transactions
+    FOR VALUES FROM ('2026-08-01') TO ('2026-09-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_09 PARTITION OF transactions
+    FOR VALUES FROM ('2026-09-01') TO ('2026-10-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_10 PARTITION OF transactions
+    FOR VALUES FROM ('2026-10-01') TO ('2026-11-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_11 PARTITION OF transactions
+    FOR VALUES FROM ('2026-11-01') TO ('2026-12-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2026_12 PARTITION OF transactions
+    FOR VALUES FROM ('2026-12-01') TO ('2027-01-01');
+
+-- Create partitions for 2027 (forward planning)
+CREATE TABLE IF NOT EXISTS transactions_2027_01 PARTITION OF transactions
+    FOR VALUES FROM ('2027-01-01') TO ('2027-02-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2027_02 PARTITION OF transactions
+    FOR VALUES FROM ('2027-02-01') TO ('2027-03-01');
+
+CREATE TABLE IF NOT EXISTS transactions_2027_03 PARTITION OF transactions
+    FOR VALUES FROM ('2027-03-01') TO ('2027-04-01');
+
+COMMIT;

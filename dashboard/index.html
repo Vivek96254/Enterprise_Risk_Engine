@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Engine | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <h1>Risk Engine</h1>
+                <p class="tagline">Enterprise Transaction Analytics</p>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="admin@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>Sign In</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <p class="login-hint">Demo: admin@example.com / Admin123!@#</p>
+            </form>
+            
+            <div id="login-error" class="error-message"></div>
+        </div>
+        
+        <div class="login-bg">
+            <div class="grid-pattern"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard-screen" class="screen">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon small">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <span>Risk Engine</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-view="overview">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>Overview</span>
+                </a>
+                <a href="#" class="nav-item" data-view="transactions">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                    <span>Transactions</span>
+                </a>
+                <a href="#" class="nav-item" data-view="flagged">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                        <line x1="4" y1="22" x2="4" y2="15"/>
+                    </svg>
+                    <span>Flagged</span>
+                    <span class="nav-badge" id="flagged-count">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="experiments">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 3h6v2H9zM12 8v8M8 12h8"/>
+                        <circle cx="12" cy="12" r="9"/>
+                    </svg>
+                    <span>A/B Tests</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="user-details">
+                        <span id="user-email">admin@example.com</span>
+                        <span class="user-role" id="user-role">Admin</span>
+                    </div>
+                </div>
+                <button id="logout-btn" class="btn-icon" title="Sign Out">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                        <polyline points="16,17 21,12 16,7"/>
+                        <line x1="21" y1="12" x2="9" y2="12"/>
+                    </svg>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h2 id="view-title">Overview</h2>
+                    <span class="header-time" id="current-time"></span>
+                </div>
+                <div class="header-right">
+                    <div class="status-indicator" id="api-status">
+                        <span class="status-dot"></span>
+                        <span>Connecting...</span>
+                    </div>
+                    <button class="btn-icon" id="refresh-btn" title="Refresh">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Views -->
+            <div class="content-area">
+                <!-- Overview View -->
+                <div id="overview-view" class="view active">
+                    <!-- Metrics Cards -->
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon green">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <div class="metric-data">
+                                <span class="metric-value" id="metric-tps">--</span>
+                                <span class="metric-label">Transactions/sec</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12,6 12,12 16,14"/>
+                                </svg>
+                            </div>
+                            <div class="metric-data">
+                                <span class="metric-value" id="metric-latency">--</span>
+                                <span class="metric-label">Avg Latency (ms)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon orange">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/>
+                                    <line x1="4" y1="22" x2="4" y2="15"/>
+                                </svg>
+                            </div>
+                            <div class="metric-data">
+                                <span class="metric-value" id="metric-flagged">--</span>
+                                <span class="metric-label">Flagged Today</span>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon red">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="metric-data">
+                                <span class="metric-value" id="metric-error-rate">--</span>
+                                <span class="metric-label">Error Rate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-grid">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Risk Distribution</h3>
+                                <span class="chart-period">Last 7 days</span>
+                            </div>
+                            <div class="chart-body">
+                                <div class="risk-distribution" id="risk-distribution">
+                                    <div class="risk-bar-container">
+                                        <div class="risk-bar" data-level="low">
+                                            <div class="risk-bar-fill" style="--percent: 0%"></div>
+                                        </div>
+                                        <span class="risk-label">Low</span>
+                                        <span class="risk-value" id="risk-low">0</span>
+                                    </div>
+                                    <div class="risk-bar-container">
+                                        <div class="risk-bar" data-level="medium">
+                                            <div class="risk-bar-fill" style="--percent: 0%"></div>
+                                        </div>
+                                        <span class="risk-label">Medium</span>
+                                        <span class="risk-value" id="risk-medium">0</span>
+                                    </div>
+                                    <div class="risk-bar-container">
+                                        <div class="risk-bar" data-level="high">
+                                            <div class="risk-bar-fill" style="--percent: 0%"></div>
+                                        </div>
+                                        <span class="risk-label">High</span>
+                                        <span class="risk-value" id="risk-high">0</span>
+                                    </div>
+                                    <div class="risk-bar-container">
+                                        <div class="risk-bar" data-level="critical">
+                                            <div class="risk-bar-fill" style="--percent: 0%"></div>
+                                        </div>
+                                        <span class="risk-label">Critical</span>
+                                        <span class="risk-value" id="risk-critical">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>Hourly Volume</h3>
+                                <span class="chart-period">Today</span>
+                            </div>
+                            <div class="chart-body">
+                                <div class="volume-chart" id="volume-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Top Rules -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Top Triggered Rules</h3>
+                            <span class="table-period">Last 7 days</span>
+                        </div>
+                        <div class="table-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rule ID</th>
+                                        <th>Triggers</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="top-rules-body">
+                                    <tr class="loading-row">
+                                        <td colspan="3">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions View -->
+                <div id="transactions-view" class="view">
+                    <div class="view-header">
+                        <div class="search-box">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                            <input type="text" id="tx-search" placeholder="Enter Account ID (UUID)...">
+                        </div>
+                        <button class="btn-secondary" id="search-tx-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:4px;">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                            Search
+                        </button>
+                        <button class="btn-ghost" id="clear-search-btn" title="Clear search and show all">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                        <button class="btn-primary" id="new-tx-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span>New Transaction</span>
+                        </button>
+                    </div>
+                    
+                    <div class="info-banner" id="pipeline-info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        <span>
+                            <strong>Pipeline:</strong> Transaction → API → PostgreSQL → Redis Stream → Worker → Risk Score
+                        </span>
+                    </div>
+                    
+                    <!-- CSV Upload Section -->
+                    <div class="csv-upload-section" id="csv-upload-section">
+                        <div class="csv-upload-header" onclick="toggleCsvUpload()">
+                            <div class="csv-upload-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                <span>Bulk Upload (CSV)</span>
+                            </div>
+                            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </div>
+                        <div class="csv-upload-content" id="csv-upload-content" style="display: none;">
+                            <div class="csv-upload-dropzone" id="csv-dropzone">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="12" y1="18" x2="12" y2="12"/>
+                                    <line x1="9" y1="15" x2="15" y2="15"/>
+                                </svg>
+                                <p>Drag & drop CSV file here or <label for="csv-file" class="csv-browse">browse</label></p>
+                                <input type="file" id="csv-file" accept=".csv" style="display: none;">
+                                <span class="csv-format-hint">Format: account_id, amount, currency, merchant, category, country, channel, location</span>
+                            </div>
+                            <div class="csv-preview" id="csv-preview" style="display: none;">
+                                <div class="csv-preview-header">
+                                    <span id="csv-file-name">file.csv</span>
+                                    <span id="csv-row-count">0 rows</span>
+                                </div>
+                                <div class="csv-preview-table" id="csv-preview-table"></div>
+                                <div class="csv-upload-actions">
+                                    <button type="button" class="btn-secondary" onclick="clearCsvUpload()">Clear</button>
+                                    <button type="button" class="btn-primary" onclick="processCsvUpload()">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="17 8 12 3 7 8"/>
+                                            <line x1="12" y1="3" x2="12" y2="15"/>
+                                        </svg>
+                                        Upload All
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="csv-upload-progress" id="csv-progress" style="display: none;">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="csv-progress-fill"></div>
+                                </div>
+                                <span id="csv-progress-text">Processing 0/0...</span>
+                            </div>
+                            <a href="#" class="csv-template-link" onclick="downloadCsvTemplate(event)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Download CSV Template
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Recent Transactions</h3>
+                            <span class="table-period">Click account ID to filter</span>
+                        </div>
+                        <div class="table-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Account</th>
+                                        <th>Amount</th>
+                                        <th>Merchant</th>
+                                        <th>Status</th>
+                                        <th>Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-body">
+                                    <tr class="loading-row">
+                                        <td colspan="6">Loading transactions...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flagged View -->
+                <div id="flagged-view" class="view">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>Flagged Transactions</h3>
+                            <div class="pagination" id="flagged-pagination">
+                                <button class="btn-icon" id="flagged-prev" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="15,18 9,12 15,6"/>
+                                    </svg>
+                                </button>
+                                <span id="flagged-page-info">Page 1</span>
+                                <button class="btn-icon" id="flagged-next">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="9,18 15,12 9,6"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction</th>
+                                        <th>Account</th>
+                                        <th>Amount</th>
+                                        <th>Risk Score</th>
+                                        <th>Level</th>
+                                        <th>Rules Triggered</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="flagged-body">
+                                    <tr class="loading-row">
+                                        <td colspan="6">Loading...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experiments View -->
+                <div id="experiments-view" class="view">
+                    <div class="view-header">
+                        <button class="btn-primary" id="new-experiment-btn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            <span>New Experiment</span>
+                        </button>
+                    </div>
+                    
+                    <div class="experiments-grid" id="experiments-grid">
+                        <div class="loading-card">Loading experiments...</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Transaction Modal -->
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Transaction</h3>
+                <button class="btn-icon modal-close" onclick="closeTransactionModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="transaction-form" class="modal-form">
+                <div class="form-group">
+                    <label for="tx-account-select">Select Account</label>
+                    <select id="tx-account-select" onchange="onAccountSelect()">
+                        <option value="">Loading accounts...</option>
+                    </select>
+                    <span class="form-hint">Select an existing account or create a new one</span>
+                </div>
+                <div class="form-group" id="new-account-section" style="display: none;">
+                    <label for="tx-new-account-name">New Account Name</label>
+                    <input type="text" id="tx-new-account-name" placeholder="e.g., John Doe's Checking">
+                    <span class="form-hint">A new user and account will be created</span>
+                </div>
+                <input type="hidden" id="tx-account-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tx-amount">Amount ($)</label>
+                        <input type="number" id="tx-amount" min="1" step="0.01" value="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tx-currency">Currency</label>
+                        <select id="tx-currency">
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                            <option value="GBP">GBP</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tx-merchant">Merchant</label>
+                        <input type="text" id="tx-merchant" placeholder="Store name" value="Test Store">
+                    </div>
+                    <div class="form-group">
+                        <label for="tx-category">Category</label>
+                        <select id="tx-category">
+                            <option value="retail">Retail</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="travel">Travel</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="crypto">Crypto</option>
+                            <option value="gambling">Gambling</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tx-country">Country</label>
+                        <select id="tx-country">
+                            <optgroup label="Americas">
+                                <option value="US">🇺🇸 United States</option>
+                                <option value="CA">🇨🇦 Canada</option>
+                                <option value="MX">🇲🇽 Mexico</option>
+                                <option value="BR">🇧🇷 Brazil</option>
+                                <option value="AR">🇦🇷 Argentina</option>
+                            </optgroup>
+                            <optgroup label="Europe">
+                                <option value="GB">🇬🇧 United Kingdom</option>
+                                <option value="DE">🇩🇪 Germany</option>
+                                <option value="FR">🇫🇷 France</option>
+                                <option value="IT">🇮🇹 Italy</option>
+                                <option value="ES">🇪🇸 Spain</option>
+                                <option value="NL">🇳🇱 Netherlands</option>
+                                <option value="CH">🇨🇭 Switzerland</option>
+                            </optgroup>
+                            <optgroup label="Asia Pacific">
+                                <option value="JP">🇯🇵 Japan</option>
+                                <option value="CN">🇨🇳 China</option>
+                                <option value="IN">🇮🇳 India</option>
+                                <option value="SG">🇸🇬 Singapore</option>
+                                <option value="AU">🇦🇺 Australia</option>
+                                <option value="KR">🇰🇷 South Korea</option>
+                                <option value="HK">🇭🇰 Hong Kong</option>
+                            </optgroup>
+                            <optgroup label="Middle East & Africa">
+                                <option value="AE">🇦🇪 UAE</option>
+                                <option value="SA">🇸🇦 Saudi Arabia</option>
+                                <option value="NG">🇳🇬 Nigeria</option>
+                                <option value="ZA">🇿🇦 South Africa</option>
+                            </optgroup>
+                            <optgroup label="⚠️ High Risk">
+                                <option value="RU">🇷🇺 Russia (High Risk)</option>
+                                <option value="UA">🇺🇦 Ukraine (High Risk)</option>
+                                <option value="VE">🇻🇪 Venezuela (High Risk)</option>
+                            </optgroup>
+                            <optgroup label="🚫 Sanctioned">
+                                <option value="IR">🇮🇷 Iran (Sanctioned)</option>
+                                <option value="NK">🇰🇵 North Korea (Sanctioned)</option>
+                                <option value="SY">🇸🇾 Syria (Sanctioned)</option>
+                                <option value="CU">🇨🇺 Cuba (Sanctioned)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tx-channel">Channel</label>
+                        <select id="tx-channel">
+                            <option value="online">Online</option>
+                            <option value="pos">POS (In-store)</option>
+                            <option value="atm">ATM</option>
+                            <option value="mobile">Mobile App</option>
+                            <option value="wire">Wire Transfer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tx-location">Location (City)</label>
+                    <input type="text" id="tx-location" list="city-suggestions" placeholder="Start typing a city..." value="New York">
+                    <datalist id="city-suggestions">
+                        <option value="New York, US">
+                        <option value="Los Angeles, US">
+                        <option value="Chicago, US">
+                        <option value="London, GB">
+                        <option value="Paris, FR">
+                        <option value="Berlin, DE">
+                        <option value="Tokyo, JP">
+                        <option value="Singapore, SG">
+                        <option value="Sydney, AU">
+                        <option value="Dubai, AE">
+                        <option value="Mumbai, IN">
+                        <option value="Shanghai, CN">
+                        <option value="São Paulo, BR">
+                        <option value="Toronto, CA">
+                        <option value="Moscow, RU">
+                        <option value="Lagos, NG">
+                    </datalist>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeTransactionModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Submit Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Experiment Modal -->
+    <div id="experiment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Experiment</h3>
+                <button class="btn-icon modal-close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <form id="experiment-form" class="modal-form">
+                <div class="form-group">
+                    <label for="exp-name">Experiment Name</label>
+                    <input type="text" id="exp-name" placeholder="e.g., New Velocity Rules" required>
+                </div>
+                <div class="form-group">
+                    <label for="exp-description">Description</label>
+                    <textarea id="exp-description" placeholder="Describe the hypothesis..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exp-control-rules">Control Rules (comma-separated)</label>
+                        <input type="text" id="exp-control-rules" placeholder="RULE_001, RULE_002">
+                    </div>
+                    <div class="form-group">
+                        <label for="exp-test-rules">Test Rules (comma-separated)</label>
+                        <input type="text" id="exp-test-rules" placeholder="RULE_003, RULE_004">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exp-split">Traffic Split (0-1)</label>
+                    <input type="number" id="exp-split" min="0" max="1" step="0.1" value="0.5" required>
+                    <span class="form-hint">Percentage of traffic going to test group</span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary modal-cancel">Cancel</button>
+                    <button type="submit" class="btn-primary">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
